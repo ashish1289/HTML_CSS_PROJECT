@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Assissment1</h1>
+    <% if (locals.message) { %>
+    <h3><%= message %></h3>
+    <% } %>
+    <form method="post" action="/api/Order">
+      <label for="">product name</label>
+      <select name="ProdId" onchange="findRate(this.value)">
+        <option hidden>Select the product</option>
+        <% product.forEach(prod => { %>
+        <option value="<%=prod._id %>"><%=prod.ProdName %></option>
+        <% }); %>
+      </select>
+      <br />
+      <br />
+      <label for="">product Rate</label>
+      <input type="text" name="ProdRate" id="ProdRate" />
+      <input type="hidden" name="ProdQty" id="ProdQty" />
+      <br />
+      <br />
+
+      <label for="">Order Qty</label>
+      <input type="text" name="OrderQty" id="OrderQty" onkeyup="checkQty()" />
+      <br />
+      <br />
+
+      <label for="">Order Value</label>
+      <input type="text" name="OrderValue" id="OrderValue" />
+      <br />
+
+      <input type="submit" name="btn" id="submitBtn" value="Order" />
+    </form>
+    <% if (locals.orders) { %>
+    <table border="1 solid black" width="100%" style="text-align: center">
+      <tr>
+        <th>Sl no</th>
+        <th>Product Name</th>
+        <th>Product Rate</th>
+        <th>Order Quantity</th>
+        <th>Order Value</th>
+        <th>Action</th>
+      </tr>
+      <% if (orders.length > 0) { %> <% orders.forEach((order, index) => { %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= order.prodId.ProdName %></td>
+        <td><%= order.prodRate %></td>
+        <td><%= order.orderQty %></td>
+        <td><%= order.orderValue %></td>
+        <td>
+          <a href="/api/editOrder/<%=order._id %>"><button>Edit</button></a>
+          <a href="/api/deleteOrder/<%=order._id %>"
+            ><button>Delete</button></a
+          >
+        </td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td colspan="6">No order found</td>
+      </tr>
+      <% } %>
+    </table>
+    <% }else{ %>
+    <h1>No Orders Made</h1>
+    <% } %>
+    <script>
+      function findRate(id) {
+        $.ajax({
+          url: "/api/findProduct/" + id,
+          type: "get",
+          dataType: "json",
+          success: function (res) {
+            console.log(res);
+            $("#ProdRate").val(res.ProdRate);
+            $("#ProdQty").val(res.ProdQty);
+          },
+        });
+      }
+
+      function checkQty() {
+        const OrderQty = parseInt($("#OrderQty").val());
+        const ProdQty = parseInt($("#ProdQty").val());
+        const ProdRate = parseInt($("#ProdRate").val());
+        if (OrderQty > ProdQty) {
+          alert("Limit Exceeded");
+          $("#OrderQty").val("");
+          $("#OrderValue").val("");
+        } else {
+          $("#OrderValue").val(ProdRate * OrderQty);
+        }
+      }
+    </script>
+  </body>
+</html>

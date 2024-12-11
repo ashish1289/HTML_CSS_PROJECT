@@ -1,0 +1,17 @@
+{
+  "name": "assessment-1",
+  "version": "1.0.0",
+  "description": "Product Order Management",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "SEEREE",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "mongoose": "^8.7.0",
+    "nodemon": "^3.1.7"
+  }
+}

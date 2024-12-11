@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <title>Edit Order</title>
+  </head>
+  <body>
+    <h1>Edit Order</h1>
+    <form method="post" action="/api/updateOrder/<%=order.id %>">
+      <label for="ProdId">Product Name</label>
+      <input
+        type="text"
+        name="ProdName"
+        id="ProdId"
+        value="<%=order.prodId.ProdName %>"
+        readonly
+      />
+      <br />
+      <label for="ProdRate">Product Rate</label>
+      <input
+        type="text"
+        name="ProdRate"
+        id="ProdRate"
+        value="<%=order.prodRate %>"
+        readonly
+      />
+      <input
+        type="hidden"
+        name="ProdQty"
+        id="ProdQty"
+        value="<%=order.prodId.ProdQty %>"
+      />
+      <br />
+      <label for="OrderQty">Order Qty</label>
+      <input
+        type="text"
+        name="orderQty"
+        id="OrderQty"
+        value="<%=order.orderQty %>"
+        onkeyup="checkQty()"
+      />
+      <br />
+      <label for="OrderValue">Order Value</label>
+      <input
+        type="text"
+        name="orderValue"
+        id="OrderValue"
+        value="<%=order.orderValue %>"
+        readonly
+      />
+      <br />
+      <input type="submit" name="btn" value="Update" />
+    </form>
+    <script>
+      function checkQty() {
+        const orderQty = parseInt($("#OrderQty").val());
+        const prodQty = parseInt($("#ProdQty").val());
+        const prodRate = parseInt($("#ProdRate").val());
+
+        if (isNaN(orderQty)) {
+          alert("Please enter a valid order quantity.");
+          $("#OrderValue").val("");
+          return;
+        }
+
+        if (orderQty > prodQty) {
+          alert("Quantity limit exceeded.");
+          $("#OrderQty").val("");
+          $("#OrderValue").val("");
+        } else {
+          const orderValue = prodRate * orderQty;
+          $("#OrderValue").val(orderValue || "");
+        }
+      }
+    </script>
+  </body>
+</html>
